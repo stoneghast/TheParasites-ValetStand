@@ -1,0 +1,28 @@
+Valet Stand for The Parasites, with UE4SS
+Tested on game version 0.1.6.0.2.5. On any other version the mod's script stops itself and does nothing.
+
+THIS FILE IS FOR PLAYERS WHO DO NOT HAVE UE4SS YET
+It includes UE4SS, the script loader the mod runs on, in the exact build the mod was tested with.
+Already have UE4SS? Use the plain download instead: this one replaces your UE4SS and its settings.
+
+INSTALL
+Extract this zip into the game's main folder, the one that contains the TheParasites folder. Let it merge folders. That is all.
+You should end up with:
+
+  TheParasites\Content\Paks\zzz_ValetStand_P.pak
+  TheParasites\Binaries\Win64\dwmapi.dll                 (UE4SS's loader)
+  TheParasites\Binaries\Win64\ue4ss\                      (UE4SS)
+  TheParasites\Binaries\Win64\ue4ss\Mods\ValetStand\
+
+USE
+Notebook, Build tab, page 5, "Valet Stand". It costs 2 sticks, 4 stones and 5 plant fibres.
+Press F on the finished stand to open its panel.
+
+UNINSTALL
+Take your clothes off every stand and delete the stands first. Then delete the pak and the Mods\ValetStand folder.
+To remove UE4SS as well, delete dwmapi.dll and the ue4ss folder from TheParasites\Binaries\Win64.
+
+ABOUT UE4SS
+UE4SS v3.0.1 experimental build 1218 (git 560411f1), unmodified, from https://github.com/UE4SS-RE/RE-UE4SS
+It is MIT licensed: see ue4ss\LICENSE. UE4SS is not part of this mod and is made by its own authors.
+Its default settings switch on a few small helper mods of its own, such as an in-game console.

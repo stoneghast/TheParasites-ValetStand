@@ -1,0 +1,225 @@
+{
+ "units": "metres, Z up, faces -Y; UE: x100, rotation XYZ Euler degrees",
+ "parts": [
+  {
+   "part": "Fibre_Chest",
+   "resource": "PlantFibers",
+   "mesh": "/Game/Mods/ValetStand/SM_VS_Fibre_Chest",
+   "location_m": [
+    0,
+    0,
+    0
+   ],
+   "rotation_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "part": "Fibre_Hips",
+   "resource": "PlantFibers",
+   "mesh": "/Game/Mods/ValetStand/SM_VS_Fibre_Hips",
+   "location_m": [
+    0,
+    0,
+    0
+   ],
+   "rotation_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "part": "Fibre_ThighL",
+   "resource": "PlantFibers",
+   "mesh": "/Game/Mods/ValetStand/SM_VS_Fibre_ThighL",
+   "location_m": [
+    0,
+    0,
+    0
+   ],
+   "rotation_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "part": "Fibre_ThighR",
+   "resource": "PlantFibers",
+   "mesh": "/Game/Mods/ValetStand/SM_VS_Fibre_ThighR",
+   "location_m": [
+    0,
+    0,
+    0
+   ],
+   "rotation_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "part": "Fibre_Head",
+   "resource": "PlantFibers",
+   "mesh": "/Game/Mods/ValetStand/SM_VS_Fibre_Head",
+   "location_m": [
+    0,
+    0,
+    0
+   ],
+   "rotation_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "part": "Stick_Pole",
+   "resource": "WoodStick",
+   "mesh": "/Game/Megascans/3D_Assets/Palisade_Strut_tjlicaqfa/Palisade_Strut_LOD2_tjlicaqfa",
+   "location_m": [
+    0.0,
+    0.023,
+    1.0125
+   ],
+   "rotation_deg": [
+    -0.47,
+    0.171,
+    -160.001
+   ],
+   "scale": [
+    0.9,
+    0.9,
+    1.0731
+   ]
+  },
+  {
+   "part": "Stick_Leg",
+   "resource": "WoodStick",
+   "mesh": "/Game/Megascans/3D_Assets/Palisade_Strut_tjlicaqfa/Palisade_Strut_LOD2_tjlicaqfa",
+   "location_m": [
+    0.0,
+    0.189,
+    0.22
+   ],
+   "rotation_deg": [
+    26.259,
+    -20.367,
+    35.202
+   ],
+   "scale": [
+    0.8,
+    0.8,
+    0.5574
+   ]
+  },
+  {
+   "part": "Stone_01",
+   "resource": "Stone",
+   "mesh": "/Game/Megascans/3D_Assets/Rounded_Cobble_ullifbijw_00/Rounded_Cobble_LOD2_ullifbijw",
+   "location_m": [
+    -0.1129,
+    0.38,
+    0.04
+   ],
+   "rotation_deg": [
+    0.0,
+    -9.0,
+    105.0
+   ],
+   "scale": [
+    1.7,
+    1.7,
+    1.7
+   ]
+  },
+  {
+   "part": "Stone_02",
+   "resource": "Stone",
+   "mesh": "/Game/Megascans/3D_Assets/Rounded_Cobble_ullifbijw_00/Rounded_Cobble_LOD2_ullifbijw",
+   "location_m": [
+    0.0771,
+    0.38,
+    0.04
+   ],
+   "rotation_deg": [
+    0.0,
+    9.0,
+    75.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ]
+  },
+  {
+   "part": "Stone_03",
+   "resource": "Stone",
+   "mesh": "/Game/Megascans/3D_Assets/Rounded_Cobble_ullifbijw_00/Rounded_Cobble_LOD2_ullifbijw",
+   "location_m": [
+    0.0129,
+    0.36,
+    0.1335
+   ],
+   "rotation_deg": [
+    -0.931,
+    -6.0,
+    7.0
+   ],
+   "scale": [
+    1.5,
+    1.5,
+    1.5
+   ]
+  },
+  {
+   "part": "Stone_04",
+   "resource": "Stone",
+   "mesh": "/Game/Megascans/3D_Assets/Rounded_Cobble_ullifbijw_00/Rounded_Cobble_LOD2_ullifbijw",
+   "location_m": [
+    0.0,
+    0.1968,
+    0.0509
+   ],
+   "rotation_deg": [
+    90.0,
+    -0.0,
+    -8.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ]
+  }
+ ]
+}
