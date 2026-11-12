@@ -35,6 +35,7 @@ local Dress = require("dress")   -- step 4: the slotted garments shown on the st
 local Notebook = require("notebook")   -- the stand's entry in the notebook's Build tab
 local Wardrobe = require("wardrobe")   -- the panel's Undress and Dress buttons
 local Defer = require("defer")         -- work that must not run inside a hook
+local Lang = require("lang")           -- the mod's text in the game's current language
 
 local MOD_DIR = "/Game/Mods/ValetStand"
 local GHOST_CLASS = MOD_DIR .. "/BP_ValetStand.BP_ValetStand_C"
@@ -133,6 +134,27 @@ local BUILD_OVERLAY = 18   -- E_TP_OverlayState while placing a building
 -- asset, because the placeholder BuildingBase declares no SCS nodes to override.
 local PLACEMENT_BOX = { loc = { X = 0, Y = 0, Z = 86.5 }, scale = { X = 0.8, Y = 0.8, Z = 2.61 } }   -- 3 cm to 170 cm, 26 cm half width
 
+-- The name in the game's language (lang.lua): the ghost's BuildingName (build prompt) and the station's ContainerName (F prompt,
+-- panel title), on both class defaults, so new actors spawn with it, and on every actor in the world. Writes only what differs,
+-- so it is cheap to run on a timer, which also catches a loaded save and a change of language in the settings.
+local GHOST_CDO = MOD_DIR .. "/BP_ValetStand.Default__BP_ValetStand_C"
+local STATION_CDO = MOD_DIR .. "/BP_ValetStandStation.Default__BP_ValetStandStation_C"
+
+-- a text property set to `text` only if it differs (cheap enough for the timer), on an object that may be gone
+local function setText(obj, prop, text)
+    pcall(function()
+        if isValidObj(obj) and obj[prop]:ToString() ~= text then obj[prop] = FText(text) end
+    end)
+end
+
+local function localizeActors()
+    local name = Lang.name()
+    setText(StaticFindObject(GHOST_CDO), "BuildingName", name)
+    setText(StaticFindObject(STATION_CDO), "ContainerName", name)
+    for _, a in ipairs(FindAllOf("BP_ValetStand_C") or {}) do setText(a, "BuildingName", name) end
+    for _, a in ipairs(FindAllOf("BP_ValetStandStation_C") or {}) do setText(a, "ContainerName", name) end
+end
+
 local function fitPlacementBoxes(brush, out)
     local ok, err = pcall(function()
         brush.Box:SetGenerateOverlapEvents(false)
@@ -160,6 +182,7 @@ local function place(out)
     local brush = nil
     pcall(function() brush = comp.TmpCurrentActorBuilding end)
     if isValidObj(brush) then fitPlacementBoxes(brush, out) else out("no brush to fit placement boxes on") end
+    localizeActors()
     local r = {}   -- UE4SS: out parameters come back in a table passed in their place
     pcall(function() comp:IsBuilding(r) end)
     pcall(function() out("overlay=" .. tostring(pawn.OverlayState) .. " IsBuilding()=" .. tostring(r.IsBuilding) .. " brush=" .. tostring(comp.TmpCurrentActorBuilding)) end)
@@ -249,6 +272,7 @@ local function swapToStation(ghost, out)
     if not ok or not isValidObj(station) then out("swap: SpawnActor failed " .. tostring(err)) return end
     out("swap: " .. fullName(station) .. " at " .. string.format("%.0f %.0f %.0f yaw %.0f", loc.X, loc.Y, loc.Z, rot.Yaw))
     pcall(function() ghost:K2_DestroyActor() end)
+    localizeActors()
 end
 
 -- 'vs swap': the nearest finished ghost (built before the hook existed, e.g. the one already in the save)
@@ -267,6 +291,43 @@ local function swapNearest(out)
     swapToStation(best, out)
 end
 
+-- --- station panel: text in the game's language -------------------------------------------
+-- The slot hints and button tooltips (lang.lua). A panel widget lives on after it closes and the open hook fires once, so this also
+-- runs on main.lua's timer for every panel there is: a change of language reaches an open or reopened panel. Writes only what differs.
+-- The container hands its hint to each slot widget when it creates it, and a slot builds its tooltip on the first hover and keeps it,
+-- so all three get the text. The slots' container names, which pair them with the player's, are never touched.
+local function localizePanel(w)
+    for _, name in ipairs(SLOTS) do
+        local hint = Lang.hint(name)
+        local c = nil
+        pcall(function() c = w[name] end)
+        if hint and isValidObj(c) then
+            setText(c, "CustomHintsText", hint)
+            pcall(function()
+                c.WSlots:ForEach(function(_, e)
+                    local s = e:get()
+                    setText(s, "CustomHintsText", hint)
+                    setText(s.OnHoverWidgetToolTips, "HintsText", hint)
+                end)
+            end)
+        end
+    end
+    for button, text in pairs({ VS_Undress = Lang.undress(), VS_Dress = Lang.dress() }) do
+        pcall(function()
+            local b = w[button]
+            if isValidObj(b) and b.ToolTipText:ToString() ~= text then b:SetToolTipText(FText(text)) end
+        end)
+    end
+end
+
+local function localizePanels()
+    for _, s in ipairs(FindAllOf("BP_ValetStandStation_C") or {}) do
+        local w = nil
+        pcall(function() w = s.BP_JigMultiplayer.InventoryWidgetRef end)
+        if isValidObj(w) then localizePanel(w) end
+    end
+end
+
 -- --- station panel: register the slots the way GetListOfContainers would --------------------
 local function registerPanelSlots(comp, out)
     local w = nil
@@ -283,7 +344,9 @@ local function registerPanelSlots(comp, out)
             out("panel: slot widget missing: " .. name)
         end
     end
-    out("panel: registered " .. n .. "/" .. #SLOTS .. " slots on " .. fullName(comp))
+    localizePanel(w)
+    localizeActors()
+    out("panel: registered " .. n .. "/" .. #SLOTS .. " slots on " .. fullName(comp) .. " (language " .. Lang.current() .. ")")
 end
 
 -- --- hooks ----------------------------------------------------------------------------------
@@ -329,6 +392,14 @@ local function hookPoll()
 end
 Defer.start()
 hookPoll()
+LoopInGameThreadWithDelay(2000, function()   -- the name on actors and the notebook entry, after a load or a language change (not LoopAsync: defer.lua)
+    local ok, err = pcall(localizeActors)
+    if not ok then log("localize: " .. tostring(err)) end
+    ok, err = pcall(Notebook.refresh)
+    if not ok then log("localize notebook: " .. tostring(err)) end
+    ok, err = pcall(localizePanels)
+    if not ok then log("localize panels: " .. tostring(err)) end
+end)
 
 -- --- state -----------------------------------------------------------------------------------
 local function state(out)

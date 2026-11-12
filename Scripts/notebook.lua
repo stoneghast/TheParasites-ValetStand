@@ -12,6 +12,7 @@
 -- Nothing that loads an asset runs inside a hook (defer.lua): the draw hook uses the drawing if it is loaded, else defers the load.
 -- =============================================================================
 local Defer = require("defer")
+local Lang = require("lang")
 
 local M = {}
 
@@ -20,7 +21,6 @@ local N_BORD = "/Game/JigSInventory/Demo/Pickups/StaticMesh/Clothes/Watch/Book/N
 local ENTRY_PATH = "%.Notepad_Buildng%.WidgetTree_%d+%.BP_Page_5_4$"
 local ICONS = "/Game/JigSInventory/Jigsaw/Widgets/Images/Notepad_Icons/"
 local DRAWING = "/Game/Mods/ValetStand/T_VS_BookEntry.T_VS_BookEntry"
-local NAME = "Valet Stand"
 local COST = {   -- the recipe (mods/ValetStand/blender/build_valet_stand.py), in the notebook's own resource icons
     { "2", ICONS .. "Branch_0.Branch_0" },
     { "4", ICONS .. "Stone_0.Stone_0" },
@@ -48,7 +48,7 @@ local function describe(w)
     if not w.InProgress then return end   -- already ours: this is the setup running on our values
     Defer.run(function()
         if not valid(w) or not w.InProgress then return end
-        w.BuildingName = FText(NAME)
+        w.BuildingName = FText(Lang.name())
         w.InProgress = false
         w.UnknownDrawing = false
         w.Iteam = #COST
@@ -75,6 +75,18 @@ end
 
 -- The entry loads its own picture (the tent) each time the page is shown. Ours can be garbage collected while the notebook is
 -- closed, and describe() runs only once per widget, so when it is gone load it again outside the hook, then put it on.
+-- The entry in the game's current language. The notebook's widgets live for the whole session and the page-shown hook fires once
+-- per entry, so a change of language in the settings is caught here, on main.lua's timer: rename and re-run the page's setup, which
+-- copies the name onto the page (proven in game: Russian to Japanese on the live entry).
+function M.refresh()
+    for _, w in ipairs(FindAllOf("N_Bord_C") or {}) do
+        if not w.InProgress and w:GetFullName():find(ENTRY_PATH) and w.BuildingName:ToString() ~= Lang.name() then
+            w.BuildingName = FText(Lang.name())
+            w:CE_Load_Unload_Images(true)
+        end
+    end
+end
+
 local function draw(w)
     local tex = StaticFindObject(DRAWING)   -- not asset(): no loading inside a hook
     if valid(tex) then apply(w, tex) return end
