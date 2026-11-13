@@ -6,7 +6,7 @@ This is a fan-made mod. It is not made or endorsed by the game's developer.
 
 ## Download
 
-Get the mod from its Nexus Mods page or this repository's Releases. There are two files:
+Get the mod from its [Nexus Mods page](https://www.nexusmods.com/theparasites/mods/24) or this repository's [Releases](https://github.com/stoneghast/TheParasites-ValetStand/releases). There are two files:
 
 - **Valet Stand with UE4SS**: for players who don't have UE4SS yet. One zip, nothing else to install.
 - **Valet Stand**: for players who already use UE4SS for other mods.
